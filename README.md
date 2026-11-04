@@ -1,6 +1,6 @@
 # Mechanical Engineering Toolkit
 
-A Python package that solves common mechanical engineering hand calculations: beam deflection and stress, torsion and shear, gear trains, thermal expansion and heat transfer, bearing life, unit conversion, and material property lookup.
+A Python package that solves common mechanical engineering hand calculations: beam deflection and stress, torsion and shear, gear trains, thermal expansion and heat transfer, bearing life, column buckling, unit conversion, and material property lookup.
 
 Every formula is checked against a standard Mechanics of Materials or Machine Design reference. See [`docs/theory.md`](docs/theory.md) for the full derivation list.
 
@@ -37,6 +37,7 @@ SAFE
 - **Gear ratio calculator** — single-stage and multi-stage (compound) gear trains, speed/torque output, center distance
 - **Thermodynamics** — linear/area/volumetric thermal expansion, thermal stress in constrained members, ideal gas law, conduction and convection heat transfer
 - **Bearing life estimator** — L10 basic rating life per ISO 281, for ball and roller bearings
+- **Column buckling** — will this column bow sideways under load? Picks the Euler or Johnson formula automatically for four end conditions and gives a factor of safety
 - **Material property database** — Young's modulus, yield/ultimate strength, density, Poisson's ratio, and thermal expansion coefficient for common engineering materials
 - **Unit converter** — length, force, stress/pressure, torque, temperature, power
 - **Plotting** — deflection curves, shear/moment diagrams, stress-strain curves, gear train schematics
@@ -118,6 +119,7 @@ mechanical-engineering-toolkit/
 │   ├── gear_ratio.py              # gear ratio, speed/torque, compound gear trains
 │   ├── thermodynamics.py          # thermal expansion, ideal gas law, heat transfer
 │   ├── bearing_life.py            # L10 bearing life (ISO 281)
+│   ├── column_buckling.py         # Euler/Johnson column buckling
 │   ├── materials_database.py      # material property lookup
 │   ├── unit_converter.py          # length, force, stress, torque, temperature, power
 │   ├── plotting.py                # matplotlib visualizations
@@ -131,6 +133,7 @@ mechanical-engineering-toolkit/
 ├── tests/                         # pytest test suite
 │   ├── test_beam_calculator.py
 │   ├── test_stress_analysis.py
+│   ├── test_column_buckling.py
 │   └── test_other_modules.py
 │
 ├── docs/
@@ -152,6 +155,7 @@ mechanical-engineering-toolkit/
 | `gear_ratio` | Gear ratio, speed/torque conversion, single and multi-stage gear trains |
 | `thermodynamics` | Thermal expansion, thermal stress, ideal gas law, conduction/convection |
 | `bearing_life` | L10 bearing life, both directions (solve for life or required load rating) |
+| `column_buckling` | Critical buckling load for columns (Euler for slender, Johnson for intermediate), with factor of safety |
 | `materials_database` | Lookup table of common material properties (steel, aluminum, titanium, etc.) |
 | `unit_converter` | Length, force, stress, torque, temperature, power conversions |
 | `plotting` | Deflection curves, shear/moment diagrams, stress-strain curves, gear schematics |

@@ -81,8 +81,20 @@ This is the theory behind every calculation in the toolkit, so you (or anyone re
 - `P` = equivalent dynamic load
 - Life in hours: `L10_hours = (L10 * 10^6) / (N * 60)`, where `N` is speed in RPM
 
+## Column Buckling
+
+- Effective length: `Le = K * L`
+  - `K = 1.0` pinned-pinned, `2.0` fixed-free, `0.699` fixed-pinned, `0.5` fixed-fixed (theoretical)
+- Radius of gyration: `r = sqrt(I / A)`, using the weak-axis `I`
+- Slenderness ratio: `K * L / r`
+- Transition slenderness: `(KL/r)_t = sqrt(2 * pi^2 * E / Sy)`
+- Long columns (`KL/r >= (KL/r)_t`), Euler: `P_cr = pi^2 * E * I / (K * L)^2`
+- Intermediate columns (`KL/r < (KL/r)_t`), J.B. Johnson: `sigma_cr = Sy - (Sy * (KL/r) / (2 * pi))^2 / E`, `P_cr = sigma_cr * A`
+- The two curves meet tangentially at `(KL/r)_t`, where `sigma_cr = Sy / 2`
+
 ## Notes on Assumptions
 
 - Beam formulas assume linear-elastic material behavior, small deflections, and a beam that is long relative to its cross section (Euler-Bernoulli theory, not Timoshenko).
+- Column buckling assumes a straight, concentrically loaded, prismatic column. Real columns have initial crookedness and load eccentricity, so use a generous factor of safety, and prefer the recommended design K values (AISC: 2.1 for fixed-free, 0.80 for fixed-pinned, 0.65 for fixed-fixed) over the theoretical ones.
 - Material property values in `materials_database.py` are typical handbook figures. For a real design, confirm against a certified material data sheet or mill certificate.
 - The stress-strain curve in `plotting.py` is a simplified elastic-perfectly-plastic model for visualization. It does not model strain hardening, necking, or a true tensile test curve.
