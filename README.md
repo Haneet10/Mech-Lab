@@ -1,5 +1,9 @@
 # Mechanical Engineering Toolkit
 
+[![tests](https://github.com/Haneet10/Mech-Lab/actions/workflows/tests.yml/badge.svg)](https://github.com/Haneet10/Mech-Lab/actions/workflows/tests.yml)
+![Python](https://img.shields.io/badge/python-3.9%E2%80%933.12-3776AB)
+![License](https://img.shields.io/badge/license-MIT-green)
+
 A Python package that solves common mechanical engineering hand calculations: beam deflection and stress, torsion and shear, gear trains, thermal expansion and heat transfer, bearing life, unit conversion, and material property lookup.
 
 Every formula is checked against a standard Mechanics of Materials or Machine Design reference. See [`docs/theory.md`](docs/theory.md) for the full derivation list.
@@ -63,9 +67,8 @@ SAFE
 ## Installation
 
 ```bash
-git clone https://github.com/your-username/mechanical-engineering-toolkit.git
-cd mechanical-engineering-toolkit
-pip install -r requirements.txt
+git clone https://github.com/Haneet10/Mech-Lab.git
+cd Mech-Lab
 pip install -e .
 ```
 
@@ -109,7 +112,7 @@ python -m mech_toolkit.gui
 ## Project Structure
 
 ```
-mechanical-engineering-toolkit/
+Mech-Lab/
 │
 ├── mech_toolkit/                  # the installable package
 │   ├── __init__.py
@@ -137,6 +140,7 @@ mechanical-engineering-toolkit/
 │   └── theory.md                  # formula reference for every calculation
 │
 ├── assets/                        # generated plots used in this README
+├── .github/workflows/tests.yml    # CI: pytest + examples on Python 3.9–3.12
 ├── requirements.txt
 ├── setup.py
 ├── LICENSE
