@@ -266,3 +266,31 @@ def simply_supported_center_load_curve(length: float, load: float, elastic_modul
             y = (P * xp * (3 * L ** 2 - 4 * xp ** 2)) / (48 * E * I)
         ys.append(y)
     return xs, ys
+
+
+def cantilever_udl_curve(length: float, total_load: float, elastic_modulus: float,
+                         moment_of_inertia: float, num_points: int = 100):
+    """
+    Returns (x, y) arrays of the deflection shape for a cantilever beam
+    under a full-length UDL, measured from the fixed end.
+    y(x) = w*x^2*(6L^2 - 4Lx + x^2) / (24EI), with w = total_load / L
+    """
+    E, I, L = elastic_modulus, moment_of_inertia, length
+    w = total_load / L
+    xs = [L * i / (num_points - 1) for i in range(num_points)]
+    ys = [w * x ** 2 * (6 * L ** 2 - 4 * L * x + x ** 2) / (24 * E * I) for x in xs]
+    return xs, ys
+
+
+def simply_supported_udl_curve(length: float, total_load: float, elastic_modulus: float,
+                               moment_of_inertia: float, num_points: int = 100):
+    """
+    Returns (x, y) arrays of the deflection shape for a simply supported
+    beam under a full-span UDL.
+    y(x) = w*x*(L^3 - 2Lx^2 + x^3) / (24EI), with w = total_load / L
+    """
+    E, I, L = elastic_modulus, moment_of_inertia, length
+    w = total_load / L
+    xs = [L * i / (num_points - 1) for i in range(num_points)]
+    ys = [w * x * (L ** 3 - 2 * L * x ** 2 + x ** 3) / (24 * E * I) for x in xs]
+    return xs, ys

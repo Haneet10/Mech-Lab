@@ -633,6 +633,38 @@ def modules(t) -> str:
     return "".join(o)
 
 
+def tile(t, i) -> str:
+    """One module as its own image, so each can link to the live playground."""
+    num, name, mod, blurb, glyph = MODULES[i]
+    cw, ch = 320, 250
+    o = [svg_open(cw, ch, f"{name.title()} module",
+                  f"Animated {name.lower()} diagram. Opens the {name.lower()} calculator in the live playground.")]
+    o.append(f'<rect width="{cw}" height="{ch}" fill="{t["bg"]}"/>')
+    o.append(f'<rect x=".5" y=".5" width="{cw - 1}" height="{ch - 1}" fill="none" stroke="{t["line"]}"/>')
+    o.append(f'<path d="M12 20v-8h8M{cw - 20} 12h8v8" fill="none" stroke="{t["faint"]}"/>')
+    o.append(text(28, 36, num, t, size=11, color="load", weight=600, spacing=1))
+    o.append(text(52, 36, name, t, size=11, color="ink", weight=600, spacing=2.5))
+    o.append(glyph(40, 52, t))
+    o.append(text(28, 206, mod, t, size=12, color="result"))
+    o.append(text(28, 228, blurb, t, size=12.5, family=SANS, color="muted"))
+    o.append(text(cw - 18, 36, "RUN ↗", t, size=10, color="load", anchor="end", spacing=1.5, weight=600))
+    o.append('</svg>')
+    return "".join(o)
+
+
+def cta(t) -> str:
+    """'Open the live playground' button."""
+    W, H = 300, 48
+    o = [svg_open(W, H, "Open the live playground", "Button linking to the live Mech Lab playground.")]
+    o.append(f'<rect x=".75" y=".75" width="{W - 1.5}" height="{H - 1.5}" rx="6" fill="{t["ink"]}"/>')
+    o.append(f'<circle cx="24" cy="{H/2}" r="4" fill="{t["ok"]}">'
+             f'<animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/></circle>')
+    o.append(text(40, H / 2 + 5, "Open the live playground", t, size=14.5, color="bg", family=SANS, weight=600))
+    o.append(text(W - 22, H / 2 + 5, "→", t, size=16, color="bg", family=SANS, anchor="end", weight=600))
+    o.append('</svg>')
+    return "".join(o)
+
+
 # --------------------------------------------------------------------------
 # 3. Terminal: the example script printing its report
 # --------------------------------------------------------------------------
@@ -750,6 +782,10 @@ def main():
             f"terminal-{name}.svg": terminal(t, nums),
             f"divider-{name}.svg": divider(t),
         }
+        files[f"cta-{name}.svg"] = cta(t)
+        for i, (num, mod_name, *_rest) in enumerate(MODULES):
+            files[f"tiles/{num}-{mod_name.lower()}-{name}.svg"] = tile(t, i)
+        (out / "tiles").mkdir(exist_ok=True)
         for fn, svg in files.items():
             (out / fn).write_text(svg + "\n", encoding="utf-8")
             print(f"wrote {fn:24s} {len(svg)/1024:6.1f} KB")

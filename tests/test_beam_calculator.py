@@ -108,3 +108,29 @@ def test_report_contains_expected_fields():
     assert "Maximum Deflection" in report
     assert "Factor of Safety" in report
     assert "Beam Status" in report
+
+
+def test_udl_curves_peak_at_the_closed_form_max_deflection():
+    """The UDL deflection curves must agree with the max-deflection formulas."""
+    L, W, E, I = 3.0, 6000.0, 200e9, 8e-6
+    c = beam_calculator.cantilever_udl(L, W, I, 0.05)
+    xs, ys = beam_calculator.cantilever_udl_curve(L, W, E, I, num_points=101)
+    assert ys[0] == 0
+    assert math.isclose(ys[-1], c.max_deflection, rel_tol=1e-12)
+
+    s = beam_calculator.simply_supported_udl(L, W, I, 0.05)
+    xs, ys = beam_calculator.simply_supported_udl_curve(L, W, E, I, num_points=101)
+    assert math.isclose(ys[0], 0, abs_tol=1e-15) and math.isclose(ys[-1], 0, abs_tol=1e-15)
+    assert math.isclose(max(ys), s.max_deflection, rel_tol=1e-12)
+    assert math.isclose(ys[50], s.max_deflection, rel_tol=1e-12)   # peak at midspan
+
+
+def test_package_imports_without_loading_matplotlib():
+    """Calculations should not drag in matplotlib (keeps the browser build light)."""
+    import subprocess
+    code = ("import sys, mech_toolkit; "
+            "assert 'matplotlib' not in sys.modules; "
+            "mech_toolkit.plotting; "
+            "assert 'matplotlib' in sys.modules")
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    subprocess.run([sys.executable, "-c", code], check=True, cwd=root)
