@@ -154,6 +154,7 @@ Every function has a docstring with its units. `help(module)` lists them all.
 | `thermodynamics` | Linear, area and volumetric expansion, thermal stress in constrained members, ideal gas law, conduction and convection |
 | `bearing_life` | L10 basic rating life per ISO 281 for ball and roller bearings, solved in either direction |
 | `column_buckling` | Critical load for four end conditions, Euler for slender columns and J.B. Johnson for intermediate ones, switching at the transition slenderness ratio |
+| `fatigue` | Endurance limit with Marin surface, size and load factors, then Goodman, Soderberg or Gerber safety factor for a fluctuating stress, plus a first-cycle yield check |
 | `materials_database` | E, yield and ultimate strength, density, Poisson's ratio and thermal expansion coefficient for common steels, aluminums, titanium and more |
 | `unit_converter` | Length, force, stress and pressure, torque, temperature, power |
 | `plotting` | Deflection curves, shear and moment diagrams, stress-strain curves, gear schematics (matplotlib) |
@@ -170,6 +171,7 @@ Derivations and references for every formula are in [`docs/theory.md`](docs/theo
 
 - Beam formulas use Euler-Bernoulli theory: linear-elastic material, small deflections, and beams that are long compared to their cross section.
 - Buckling assumes a straight, concentrically loaded, prismatic column. Real columns are never perfectly straight, so use a generous factor of safety and the recommended design K values listed in the theory doc.
+- The fatigue endurance-limit estimate (`0.5 * Sut`) is for steels. Aluminum has no true endurance limit, so pass a measured fatigue strength for it.
 - Material properties are typical handbook values. For a real design, confirm them against a certified material data sheet.
 - The stress-strain curve in `plotting.py` is a simplified elastic-perfectly-plastic model for illustration, not real tensile test data.
 

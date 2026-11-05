@@ -92,6 +92,22 @@ This is the theory behind every calculation in the toolkit, so you (or anyone re
 - Intermediate columns (`KL/r < (KL/r)_t`), J.B. Johnson: `sigma_cr = Sy - (Sy * (KL/r) / (2 * pi))^2 / E`, `P_cr = sigma_cr * A`
 - The two curves meet tangentially at `(KL/r)_t`, where `sigma_cr = Sy / 2`
 
+## Fatigue
+
+- Alternating and mean stress: `sigma_a = |sigma_max - sigma_min| / 2`, `sigma_m = (sigma_max + sigma_min) / 2`
+- Uncorrected endurance limit (steel): `Se' = 0.5 * Sut` for `Sut <= 1400 MPa`, otherwise `Se' = 700 MPa`
+- Corrected endurance limit (Marin): `Se = ka * kb * kc * Se'`
+  - Surface: `ka = a * Sut^b`, `Sut` in MPa. `(a, b)` = ground `(1.58, -0.085)`, machined or cold-drawn `(4.51, -0.265)`, hot-rolled `(57.7, -0.718)`, as-forged `(272, -0.995)`
+  - Size (round, bending or torsion): `kb = 1.24 * d^-0.107` for `2.79 <= d <= 51 mm`, `kb = 1.51 * d^-0.157` for `51 < d <= 254 mm`, `kb = 1` for axial
+  - Load: `kc = 1` bending, `0.85` axial, `0.59` torsion
+- Fatigue safety factor, load line through the origin (`sigma_m > 0`):
+  - Goodman: `1/n = sigma_a/Se + sigma_m/Sut`
+  - Soderberg: `1/n = sigma_a/Se + sigma_m/Sy`
+  - Gerber: `n * sigma_a/Se + (n * sigma_m/Sut)^2 = 1`, so `n = 0.5 * (Sut/sigma_m)^2 * (sigma_a/Se) * (-1 + sqrt(1 + (2 * sigma_m * Se / (Sut * sigma_a))^2))`
+  - For `sigma_m <= 0`: `n = Se / sigma_a`
+- First-cycle yield: `n_y = Sy / (sigma_a + |sigma_m|)`
+- Reference: Shigley's Mechanical Engineering Design, Ch. 6
+
 ## Notes on Assumptions
 
 - Beam formulas assume linear-elastic material behavior, small deflections, and a beam that is long relative to its cross section (Euler-Bernoulli theory, not Timoshenko).
