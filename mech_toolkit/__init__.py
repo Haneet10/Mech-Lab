@@ -4,7 +4,7 @@ Mechanical Engineering Toolkit
 
 A Python package for common mechanical engineering hand calculations:
 beam deflection and stress, torsion and shear, gear trains, thermal
-expansion and heat transfer, bearing life, column buckling, unit conversion, and a
+expansion and heat transfer, bearing life, column buckling, fatigue, unit conversion, and a
 material property database.
 
 Quick start:
@@ -30,6 +30,7 @@ from mech_toolkit import (
     materials_database,
     bearing_life,
     column_buckling,
+    fatigue,
     plotting,
 )
 
@@ -42,5 +43,6 @@ __all__ = [
     "materials_database",
     "bearing_life",
     "column_buckling",
+    "fatigue",
     "plotting",
 ]
