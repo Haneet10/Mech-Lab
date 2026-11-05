@@ -9,8 +9,9 @@ setup(
     description="A Python toolkit for common mechanical engineering hand calculations",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    author="Haneet",
-    packages=find_packages(exclude=["tests", "examples"]),
+    author="Haneet Singh",
+    url="https://github.com/Haneet10/Mech-Lab",
+    packages=find_packages(exclude=["tests", "tests.*", "examples", "examples.*"]),
     install_requires=[
         "numpy>=1.24",
         "matplotlib>=3.7",
