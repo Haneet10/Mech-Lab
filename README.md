@@ -1,183 +1,237 @@
-# Mechanical Engineering Toolkit
+<div align="center">
 
-A Python package that solves common mechanical engineering hand calculations: beam deflection and stress, torsion and shear, gear trains, thermal expansion and heat transfer, bearing life, column buckling, unit conversion, and material property lookup.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/readme/hero-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/readme/hero-light.svg">
+  <img alt="Mech Lab: a cantilever beam deflecting under a 400 N load. Max deflection 11.85 mm, max stress 53.3 MPa, factor of safety 4.7, safe." src="assets/readme/hero-light.svg" width="100%">
+</picture>
 
-Every formula is checked against a standard Mechanics of Materials or Machine Design reference. See [`docs/theory.md`](docs/theory.md) for the full derivation list.
+<br>
 
-```
-========================================
-Cantilever Beam Analysis (Point Load)
-========================================
+[![tests](https://github.com/Haneet10/Mech-Lab/actions/workflows/tests.yml/badge.svg)](https://github.com/Haneet10/Mech-Lab/actions/workflows/tests.yml)
+![Python 3.9–3.12](https://img.shields.io/badge/python-3.9%E2%80%933.12-3d5a78?labelColor=1f2328)
+![License: MIT](https://img.shields.io/badge/license-MIT-3d5a78?labelColor=1f2328)
 
-Length:      2.00 m
-Load:        400.0 N
-Material:    Structural Steel A36
+**[Quick start](#quick-start)** &nbsp;·&nbsp; **[What it does](#what-it-does)** &nbsp;·&nbsp; **[See it run](#see-it-run)** &nbsp;·&nbsp; **[Plots](#plots-it-makes)** &nbsp;·&nbsp; **[Formulas](docs/theory.md)**
 
-Maximum Bending Moment:
-800.0 N*m
+</div>
 
-Maximum Stress:
-53.3 MPa
+<br>
 
-Maximum Deflection:
-11.85 mm
-
-Factor of Safety:
-4.7
-
-Beam Status:
-SAFE
-========================================
-```
-
-## Features
-
-- **Beam calculator** — deflection, bending moment, bending stress, and factor of safety for cantilever and simply supported beams, under point loads or distributed loads
-- **Stress analysis** — bending stress, transverse shear, torsion, principal stresses (Mohr's circle), von Mises equivalent stress
-- **Gear ratio calculator** — single-stage and multi-stage (compound) gear trains, speed/torque output, center distance
-- **Thermodynamics** — linear/area/volumetric thermal expansion, thermal stress in constrained members, ideal gas law, conduction and convection heat transfer
-- **Bearing life estimator** — L10 basic rating life per ISO 281, for ball and roller bearings
-- **Column buckling** — will this column bow sideways under load? Picks the Euler or Johnson formula automatically for four end conditions and gives a factor of safety
-- **Material property database** — Young's modulus, yield/ultimate strength, density, Poisson's ratio, and thermal expansion coefficient for common engineering materials
-- **Unit converter** — length, force, stress/pressure, torque, temperature, power
-- **Plotting** — deflection curves, shear/moment diagrams, stress-strain curves, gear train schematics
-- **Desktop GUI** — a Tkinter interface for the beam calculator, gear calculator, and unit converter
-
-## Example Output
-
-**Beam deflection curve**
-
-![Cantilever beam deflection](assets/cantilever_deflection.png)
-
-**Shear and moment diagram**
-
-![Shear and moment diagram](assets/shear_moment_diagram.png)
-
-**Stress-strain curve**
-
-![Stress-strain curve](assets/stress_strain_steel.png)
-
-**Gear train schematic**
-
-![Gear train schematic](assets/gear_train_schematic.png)
-
-## Installation
-
-```bash
-git clone https://github.com/your-username/mechanical-engineering-toolkit.git
-cd mechanical-engineering-toolkit
-pip install -r requirements.txt
-pip install -e .
-```
-
-Requires Python 3.9+, numpy, and matplotlib. The GUI additionally needs Tkinter, which ships with the standard Python installer on Windows and macOS.
-
-## Quick Start
+Mech Lab does the calculations you would normally grind through by hand in a mechanics or machine design course. Give it a beam, a gear train, a column or a bearing, and it tells you how much it bends, how stressed it is, how long it will last, and whether it is safe. Every answer is checked against a textbook formula in the test suite.
 
 ```python
 from mech_toolkit import beam_calculator
 
-# 25mm x 60mm rectangular steel bar, 2m cantilever, 400N end load
-I, c = beam_calculator.rectangular_section(width=0.025, height=0.060)
+I, c = beam_calculator.rectangular_section(width=0.025, height=0.060)   # 25 × 60 mm steel bar
+beam = beam_calculator.cantilever_point_load(length=2.0, load=400, moment_of_inertia=I,
+                                             section_modulus_c=c, material="Structural Steel A36")
 
-result = beam_calculator.cantilever_point_load(
-    length=2.0,
-    load=400,
-    moment_of_inertia=I,
-    section_modulus_c=c,
-    material="Structural Steel A36",
-)
-
-print(result.report())
-print(f"Factor of safety: {result.factor_of_safety:.2f}")
-print(f"Safe: {result.is_safe}")
+beam.is_safe              # True
+beam.factor_of_safety     # 4.69
 ```
 
-More runnable examples are in [`examples/`](examples/):
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/readme/divider-dark.svg">
+  <img alt="" src="assets/readme/divider-light.svg" width="100%">
+</picture>
+
+## What it does
+
+Eight modules, one job each. They share a materials database, so you can name a material like `"Aluminum 6061-T6"` instead of typing in its properties.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/readme/modules-dark.svg">
+  <img alt="Eight animated diagrams, one per module: a sagging beam, Mohr's circle, meshing gears, a bar expanding with heat, a spinning ball bearing, a column buckling, a stress-strain curve, and unit conversions." src="assets/readme/modules-light.svg" width="100%">
+</picture>
+
+On top of those, `plotting` draws deflection curves, shear and moment diagrams, stress-strain curves and gear schematics, and `gui` wraps the beam calculator, gear calculator and unit converter in a small desktop app.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/readme/divider-dark.svg">
+  <img alt="" src="assets/readme/divider-light.svg" width="100%">
+</picture>
+
+## See it run
+
+This is the real output of [`examples/example_beam_analysis.py`](examples/example_beam_analysis.py). The numbers in every graphic on this page are generated by the toolkit itself, so they always match what the code returns.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/readme/terminal-dark.svg">
+  <img alt="Terminal output of the beam example: length 2.00 m, load 400 N, max stress 53.3 MPa, max deflection 11.85 mm, safety factor 4.7, status SAFE, with the deflection curve plotted alongside." src="assets/readme/terminal-light.svg" width="100%">
+</picture>
+
+## Quick start
+
+```bash
+git clone https://github.com/Haneet10/Mech-Lab.git
+cd Mech-Lab
+pip install -e .
+```
+
+Then try any of the examples, or open the desktop app:
 
 ```bash
 python examples/example_beam_analysis.py
 python examples/example_gear_train.py
 python examples/example_thermal_expansion.py
-```
 
-Launch the desktop GUI:
-
-```bash
 python -m mech_toolkit.gui
 ```
 
-## Project Structure
+Needs Python 3.9 or newer, numpy and matplotlib. The desktop app also needs Tkinter, which comes with the standard Python installer on Windows and macOS.
 
-```
-mechanical-engineering-toolkit/
-│
-├── mech_toolkit/                  # the installable package
-│   ├── __init__.py
-│   ├── beam_calculator.py         # deflection, bending stress, factor of safety
-│   ├── stress_analysis.py         # bending, shear, torsion, principal/von Mises stress
-│   ├── gear_ratio.py              # gear ratio, speed/torque, compound gear trains
-│   ├── thermodynamics.py          # thermal expansion, ideal gas law, heat transfer
-│   ├── bearing_life.py            # L10 bearing life (ISO 281)
-│   ├── column_buckling.py         # Euler/Johnson column buckling
-│   ├── materials_database.py      # material property lookup
-│   ├── unit_converter.py          # length, force, stress, torque, temperature, power
-│   ├── plotting.py                # matplotlib visualizations
-│   └── gui.py                     # Tkinter desktop app
-│
-├── examples/                      # runnable demo scripts
-│   ├── example_beam_analysis.py
-│   ├── example_gear_train.py
-│   └── example_thermal_expansion.py
-│
-├── tests/                         # pytest test suite
-│   ├── test_beam_calculator.py
-│   ├── test_stress_analysis.py
-│   ├── test_column_buckling.py
-│   └── test_other_modules.py
-│
-├── docs/
-│   └── theory.md                  # formula reference for every calculation
-│
-├── assets/                        # generated plots used in this README
-├── requirements.txt
-├── setup.py
-├── LICENSE
-└── README.md
+<details>
+<summary><b>More examples</b>: gears, buckling, bearings, stress</summary>
+
+<br>
+
+```python
+from mech_toolkit import column_buckling, bearing_life, stress_analysis
+from mech_toolkit.gear_ratio import GearStage, GearTrain
+
+# Two-stage gear reducer driven by a 1750 rpm motor
+train = GearTrain([GearStage(18, 54), GearStage(16, 48)])
+train.overall_ratio                 # 9.0
+train.output_speed(1750)            # 194.4 rpm
+
+# Will a 30 mm steel rod, 1.5 m long and pinned at both ends, carry 20 kN?
+rod = column_buckling.column_critical_load(
+    length=1.5, area=7.07e-4, moment_of_inertia=3.98e-8,
+    material="Structural Steel A36", end_condition="pinned-pinned", applied_load=20e3)
+rod.method                          # 'euler' (it's slender, so Euler applies)
+rod.factor_of_safety                # 1.75
+
+# How long will a ball bearing last? C = 14 kN, load = 2 kN, 1800 rpm
+bearing_life.bearing_l10_life(14_000, 2_000, speed_rpm=1800).l10_hours   # ~3176 h
+
+# Combined bending + shear at a point, in Pa
+stress_analysis.von_mises_stress(sigma_x=80e6, sigma_y=0, tau_xy=30e6)   # 95.4 MPa
 ```
 
-## Module Overview
+Every function has a docstring with its units. `help(module)` lists them all.
 
-| Module | What it does |
+</details>
+
+## Plots it makes
+
+<table>
+  <tr>
+    <td width="50%"><img alt="Cantilever beam deflection curve" src="assets/cantilever_deflection.png"></td>
+    <td width="50%"><img alt="Shear force and bending moment diagram" src="assets/shear_moment_diagram.png"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Beam deflection curve</sub></td>
+    <td align="center"><sub>Shear and moment diagram</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img alt="Stress-strain curve for steel" src="assets/stress_strain_steel.png"></td>
+    <td width="50%"><img alt="Two-stage gear train schematic" src="assets/gear_train_schematic.png"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Stress-strain curve</sub></td>
+    <td align="center"><sub>Gear train schematic</sub></td>
+  </tr>
+</table>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/readme/divider-dark.svg">
+  <img alt="" src="assets/readme/divider-light.svg" width="100%">
+</picture>
+
+## For engineers
+
+<details>
+<summary><b>Module reference</b></summary>
+
+<br>
+
+| Module | What it covers |
 |---|---|
-| `beam_calculator` | Cantilever and simply supported beams, point loads and UDLs, deflection and stress |
-| `stress_analysis` | Bending, transverse shear, torsion, principal stresses, von Mises stress, factor of safety |
-| `gear_ratio` | Gear ratio, speed/torque conversion, single and multi-stage gear trains |
-| `thermodynamics` | Thermal expansion, thermal stress, ideal gas law, conduction/convection |
-| `bearing_life` | L10 bearing life, both directions (solve for life or required load rating) |
-| `column_buckling` | Critical buckling load for columns (Euler for slender, Johnson for intermediate), with factor of safety |
-| `materials_database` | Lookup table of common material properties (steel, aluminum, titanium, etc.) |
-| `unit_converter` | Length, force, stress, torque, temperature, power conversions |
-| `plotting` | Deflection curves, shear/moment diagrams, stress-strain curves, gear schematics |
-| `gui` | Tkinter desktop app tying the above together |
+| `beam_calculator` | Cantilever and simply supported beams under point loads and UDLs: deflection, bending moment, bending stress, factor of safety |
+| `stress_analysis` | Bending, transverse shear, torsion, principal stresses (Mohr's circle), von Mises equivalent stress |
+| `gear_ratio` | Single and compound gear trains, speed and torque output, center distance |
+| `thermodynamics` | Linear, area and volumetric expansion, thermal stress in constrained members, ideal gas law, conduction and convection |
+| `bearing_life` | L10 basic rating life per ISO 281 for ball and roller bearings, solved in either direction |
+| `column_buckling` | Critical load for four end conditions, Euler for slender columns and J.B. Johnson for intermediate ones, switching at the transition slenderness ratio |
+| `materials_database` | E, yield and ultimate strength, density, Poisson's ratio and thermal expansion coefficient for common steels, aluminums, titanium and more |
+| `unit_converter` | Length, force, stress and pressure, torque, temperature, power |
+| `plotting` | Deflection curves, shear and moment diagrams, stress-strain curves, gear schematics (matplotlib) |
+| `gui` | Tkinter desktop app for the beam calculator, gear calculator and unit converter |
 
-## Running the Tests
+Derivations and references for every formula are in [`docs/theory.md`](docs/theory.md).
+
+</details>
+
+<details>
+<summary><b>Assumptions and limitations</b></summary>
+
+<br>
+
+- Beam formulas use Euler-Bernoulli theory: linear-elastic material, small deflections, and beams that are long compared to their cross section.
+- Buckling assumes a straight, concentrically loaded, prismatic column. Real columns are never perfectly straight, so use a generous factor of safety and the recommended design K values listed in the theory doc.
+- Material properties are typical handbook values. For a real design, confirm them against a certified material data sheet.
+- The stress-strain curve in `plotting.py` is a simplified elastic-perfectly-plastic model for illustration, not real tensile test data.
+
+</details>
+
+<details>
+<summary><b>Tests</b></summary>
+
+<br>
 
 ```bash
 pip install -e ".[dev]"
 pytest tests/ -v
 ```
 
-Every formula-based function is checked against its hand-calculated value, not just checked for "does it run without crashing."
+Each formula-based function is checked against a hand-calculated value, not just run to see that it doesn't crash. CI runs the suite and every example on Python 3.9 through 3.12 for each push and pull request.
 
-## Assumptions and Limitations
+</details>
 
-- Beam formulas use Euler-Bernoulli theory: linear-elastic material, small deflections, beams long relative to their cross section.
-- Material properties in the database are typical handbook values. For a real design, confirm against a certified material data sheet.
-- The stress-strain curve in `plotting.py` is a simplified elastic-perfectly-plastic model for visualization, not a true tensile test curve.
+<details>
+<summary><b>Project structure</b></summary>
 
-See [`docs/theory.md`](docs/theory.md) for the complete formula reference.
+<br>
 
-## License
+```
+Mech-Lab/
+├── mech_toolkit/            the installable package
+│   ├── beam_calculator.py   deflection, bending stress, factor of safety
+│   ├── stress_analysis.py   bending, shear, torsion, principal and von Mises stress
+│   ├── gear_ratio.py        gear ratio, speed and torque, compound trains
+│   ├── thermodynamics.py    thermal expansion, ideal gas law, heat transfer
+│   ├── bearing_life.py      L10 bearing life (ISO 281)
+│   ├── column_buckling.py   Euler and Johnson column buckling
+│   ├── materials_database.py
+│   ├── unit_converter.py
+│   ├── plotting.py          matplotlib figures
+│   └── gui.py               Tkinter desktop app
+├── examples/                runnable demo scripts
+├── tests/                   pytest suite
+├── docs/theory.md           formula reference
+└── assets/
+    ├── *.png                plots generated by the examples
+    └── readme/              animated SVGs on this page + generate.py
+```
 
-MIT. See [LICENSE](LICENSE).
+</details>
+
+<details>
+<summary><b>About the graphics on this page</b></summary>
+
+<br>
+
+GitHub doesn't run JavaScript in READMEs, so every animation here is a plain SVG using SMIL, drawn in a light and a dark version and picked with `<picture>` to match your GitHub theme. They're generated from code, and the numbers come straight from `mech_toolkit`:
+
+```bash
+python assets/readme/generate.py
+```
+
+</details>
+
+<br>
+
+<div align="center">
+<sub>Built by <a href="https://github.com/Haneet10">Haneet Singh</a> · also see <a href="https://haneet10.github.io/Truss-Lab/">Truss Lab</a>, a truss solver that runs in your browser · MIT licensed</sub>
+</div>
