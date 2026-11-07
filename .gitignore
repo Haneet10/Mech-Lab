@@ -23,3 +23,6 @@ htmlcov/
 .idea/
 .DS_Store
 Thumbs.db
+
+# playground build output
+_site/

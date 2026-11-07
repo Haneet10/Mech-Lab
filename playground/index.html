@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Mech Lab Playground</title>
+  <meta name="description" content="Run real mechanical engineering calculations in your browser: beams, stress, gears, thermal, bearings, buckling, materials and units, powered by the Mech Lab Python package.">
+  <meta name="theme-color" content="#f6f5f1" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0e0f11" media="(prefers-color-scheme: dark)">
+  <meta property="og:title" content="Mech Lab Playground">
+  <meta property="og:description" content="Real Python engineering calculations, running in your browser.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230e0f11'/%3E%3Cpath d='M7 22V10l9 7 9-7v12' fill='none' stroke='%23ff6a2b' stroke-width='3'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="css/app.css">
+  <script>
+    // apply a saved theme before first paint, to avoid a flash
+    try { const t = localStorage.getItem("mechlab-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to calculator</a>
+
+  <header class="bar">
+    <a class="brand" href="#about" data-route="about" aria-label="Mech Lab, about this project">
+      <svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18V6l8 6 8-6v12"/></svg>
+      <span class="brand-name">Mech Lab</span><span class="brand-sub">Playground</span>
+    </a>
+    <div class="bar-right">
+      <div class="status" id="status" data-kind="loading" role="status"><i></i><span id="status-text">Starting Python</span></div>
+      <div class="history-btns" role="group" aria-label="History">
+        <button class="icon-btn" id="undo" type="button" aria-label="Undo (Ctrl+Z)" disabled>
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7.5 5 3.5 9l4 4M4 9h7.5a5 5 0 0 1 0 10H9"/></svg>
+        </button>
+        <button class="icon-btn" id="redo" type="button" aria-label="Redo (Ctrl+Shift+Z)" disabled>
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 5l4 4-4 4M16 9H8.5a5 5 0 0 0 0 10H11"/></svg>
+        </button>
+      </div>
+      <button class="icon-btn" id="theme" type="button" aria-label="Switch light or dark theme">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/><path d="M10 3.5a6.5 6.5 0 0 0 0 13Z" class="fill"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/Haneet10/Mech-Lab" target="_blank" rel="noopener" aria-label="Source on GitHub">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path class="fill" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <div class="shell">
+    <nav class="rail" aria-label="Modules">
+      <p class="rail-head">Modules</p>
+      <div id="rail-list" class="rail-list"></div>
+      <a class="rail-item about" href="#about" data-route="about"><span class="rail-num">00</span><span class="rail-name">About</span><kbd class="rail-key">0</kbd></a>
+      <div class="rail-foot">
+        <p><kbd>Ctrl</kbd><kbd>Z</kbd> undo</p>
+        <p><kbd>Ctrl</kbd><kbd>⇧</kbd><kbd>Z</kbd> redo</p>
+        <p><kbd>1</kbd>–<kbd>8</kbd> switch module</p>
+      </div>
+    </nav>
+
+    <main id="main" tabindex="-1"></main>
+  </div>
+
+  <footer class="foot">
+    <span>Built by <a href="https://github.com/Haneet10" target="_blank" rel="noopener">Haneet Singh</a></span>
+    <span>Runs the <a href="https://github.com/Haneet10/Mech-Lab" target="_blank" rel="noopener">mech_toolkit</a> Python package in your browser via Pyodide. Nothing leaves your device.</span>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <noscript><p class="noscript">The playground runs Python in your browser and needs JavaScript turned on.</p></noscript>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

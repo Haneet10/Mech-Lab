@@ -30,8 +30,18 @@ from mech_toolkit import (
     materials_database,
     bearing_life,
     column_buckling,
-    plotting,
 )
+
+
+def __getattr__(name):
+    # plotting pulls in matplotlib, which is slow to import and isn't needed
+    # for the calculations themselves (the browser playground runs without
+    # it). Load it only when someone actually asks for mech_toolkit.plotting.
+    if name == "plotting":
+        import importlib
+        return importlib.import_module("mech_toolkit.plotting")
+    raise AttributeError(f"module 'mech_toolkit' has no attribute {name!r}")
+
 
 __all__ = [
     "beam_calculator",
